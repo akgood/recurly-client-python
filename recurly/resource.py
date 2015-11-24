@@ -266,6 +266,17 @@ class Resource(object):
         respectively.
 
         """
+
+        if recurly.API_KEY is None:
+            raise recurly.UnauthorizedError('recurly.API_KEY not set')
+
+        if isinstance(recurly.API_KEY, unicode) or isinstance(recurly.SUBDOMAIN,
+                unicode):
+            raise recurly.ConfigurationError("""Setting API_KEY or SUBDOMAIN to
+                    unicode strings may cause problems. Please use strings.
+                    Issue described here:
+                    https://gist.github.com/maximehardy/d3a0a6427d2b6791b3dc""")
+
         urlparts = urlsplit(url)
         if urlparts.scheme != 'https':
             connection = http_client.HTTPConnection(urlparts.netloc)
@@ -280,8 +291,6 @@ class Resource(object):
             'User-Agent': 'recurly-python/%s' % recurly.__version__,
         })
         headers['X-Api-Version'] = recurly.api_version()
-        if recurly.API_KEY is None:
-            raise recurly.UnauthorizedError('recurly.API_KEY not set')
         headers['Authorization'] = 'Basic %s' % base64.b64encode(six.b('%s:' % recurly.API_KEY)).decode()
 
         log = logging.getLogger('recurly.http.request')

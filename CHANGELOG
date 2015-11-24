@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Add `ConfigurationException` when API_KEY or SUBDOMAIN is unicode
+
 ## Version 2.2.17 October 2, 2015
 
 - Add support for bulk coupons and coupon code generation
